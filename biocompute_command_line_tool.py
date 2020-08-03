@@ -2,6 +2,7 @@
 #BioCompute Object Creator Minimum Viable Product
 import os
 import json
+from json import JSONEncoder
 from datetime import datetime
 
 class BCO():
@@ -17,6 +18,16 @@ class BCO():
        self.object_id = object_id
        self.spec_version = spec_version
        self.etag = etag
+   def startCall(): 
+      pass
+   def endCall(): 
+      pass
+
+   def default(self, object):
+      if isinstance(object, BCO):
+         return object.__dict__
+      else: 
+         return json.JSONEncoder.default(self, object)
        
 class provenance_domain():
    def __init__(self, name, version, license, created, modified, contributors, embargo=None, derived_from=None, obsolete_after=None, review=None):
@@ -215,12 +226,12 @@ def main():
    
    etag = "new" 
    etag_input = input("Enter etag value (default is 'new') For default, enter nothing.: ")
-   if etag_input.strip() != etag.strip() && etag_input.strip() != "":
+   if etag_input.strip() != etag.strip() and etag_input.strip() !=  "":
       etag = etag_input
       
    spec_version = "https://w3id.org/ieee/ieee-2791-schema/"
    spec_version_input = input("Enter version of specification for this IEEE-2791 object (BCO) (Default is: https://w3id.org/ieee/ieee-2791-schema/) For default, enter nothing.: ")
-   if spec_version_input.strip() != spec_version.strip() && spec_version_input.strip() != "":
+   if spec_version_input.strip() != spec_version.strip() and spec_version_input.strip() != "":
       spec_version = spec_version_input
    print("\n")
    
@@ -233,7 +244,7 @@ def main():
    license = input("Enter a license if this BCO is not exclusively for personal use: ")
    version = "1.0"
    version_input = input("Following semantic versioning, enter a name for this BCO (default is 1.0). For default, enter nothing.: ")
-   if version_input.strip().lower() != version.strip().lower() && version_input.strip().lower() != "":
+   if version_input.strip().lower() != version.strip().lower() and version_input.strip().lower() != "":
       version = version_input
    
    add_contributor = "y"
@@ -259,7 +270,9 @@ def main():
    scrpt = input("What is/are the uris for the script object used to perform computations?: ")
    scrpt = script(scrpt)
    script_driver = "shell"
-   script_driver = input("Enter script driver, the type of executable to perform commands in script in order to run the pipeline (Default is shell): ")
+   script_driver_input = input("Enter script driver, the type of executable to perform commands in script in order to run the pipeline (Default is shell) Enter nothing for default.: ")
+   if script_driver_input.lower().strip() != script_driver.lower().strip() and script_driver_input.lower().strip() != "":
+      script_driver = script_driver_input
    software_prerequisites = []
    add_software_prerequisite = "y"
    while(add_software_prerequisite.lower().strip() == "y"):
@@ -304,7 +317,7 @@ def main():
       name = pipeline[step_number-1].split(" ")[0]
       print("Name of tool: {}".format(name))
       name_input = input("If name of tool is not correct, enter correct name. Else, enter nothing.: ")
-      if name_input.lower().strip() != name.lower().strip() && name_input.lower.strip() != "":
+      if name_input.lower().strip() != name.lower().strip() and name_input.lower().strip() != "":
          name = name_input
       description = input("Enter purpose of the tool: ")
       # version = input("Enter version of the tool: ")
@@ -315,10 +328,12 @@ def main():
       pipeline_steps.append(pipeline_step(step_number=step_number, name=name, description=description, input_list= input_list_temp, output_list = output_list_temp))
       if step_number == 1:
          for x in input_list_temp:
-            input_list_master.append(x)
+            if x!= "":
+               input_list_master.append(x)
       if step_number == len(pipeline):
          for x in output_list_temp:
-            output_list_master.append(x)
+            if x != "":
+               output_list_master.append(x)
          
       step_number += 1  
    description = description_domain(keywords = keywords, pipeline_steps = pipeline_steps)
@@ -357,13 +372,15 @@ def main():
    try:
       print(output_bco) 
    except:
-      print("error occured") 
+      print("error occured with printing") 
    
    with open(output_filename, 'w') as json_output:
-      try: 
-         json.dump(output_bco, json_output)
-      except:
-         print("error occured with outputting as a json file")
+#       try: 
+      json_string = BCOEncoder().encode(output_bco)
+      json_output.write(json_string)
+      json_output.close()
+#       except:
+         # print("error occured with outputting as a json file")
 if __name__ == "__main__":
    main()
 
