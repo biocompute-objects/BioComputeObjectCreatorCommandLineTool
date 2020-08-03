@@ -3,7 +3,12 @@
 import os
 import json
 from json import JSONEncoder
+from pprint import pprint
 from datetime import datetime
+try:
+    import cPickle as pickle
+except ModuleNotFoundError:
+    import pickle
 
 class BCO():
    def __init__(self, provenance, usability, description, execution, io, object_id, spec_version, etag = "new", parametric = None, error = None, extension = None):
@@ -191,6 +196,19 @@ class parameter:
       self.value = value #string 
       self.step = step #string 
 
+class color:
+   PURPLE = '\033[95m'
+   CYAN = '\033[96m'
+   DARKCYAN = '\033[36m'
+   BLUE = '\033[94m'
+   GREEN = '\033[92m'
+   YELLOW = '\033[93m'
+   RED = '\033[91m'
+   BOLD = '\033[1m'
+   UNDERLINE = '\033[4m'
+   END = '\033[0m'
+
+
 def main():
    data = {}
    with open('blank_bco.json') as json_file: #testing 
@@ -202,13 +220,13 @@ def main():
    #for finding steps, split by "|"    
    
    #metadata
-   print("Welcome to the BioCompute Command Line Tool. With this tool, you can automate some parts of BCO creation and work on creating a BCO directly from the command line. \n If you make a mistake while creating your BCO, you can always edit that field in the output json file that represents your BCO.\n")
+   print(color.CYAN + "Welcome to the BioCompute Command Line Tool. With this tool, you can automate some parts of BCO creation and work on creating a BCO directly from the command line. \nIf you make a mistake while creating your BCO, you can always edit that field in the output json file that represents your BCO.\n" + color.END)
    input_filename = r'' + input("Enter name of desired input file (Output of script command/typescript): ")
    with open(input_filename, 'r') as file: 
       data = file.read()
    data = data[int(data.index("$")+1): int(data.index('\n'))]
-   print("Pipeline: " + data)
-   print("\n")
+   print("\nPipeline: " + data)
+#    print("\n")
    confirmation = input("Confirm pipeline (y or n): ")
    if confirmation.lower() == "n":
       data = input("Enter the correct pipeline: ")
@@ -220,7 +238,7 @@ def main():
    
    output_filename = input("Enter name of desired output file (e.g. example_bco.json): ")
    
-   print("Metadata information\n")
+   print(color.BOLD + "\nMetadata information\n" + color.END)
    
    object_id = input("Enter unique BCO Object ID (e.g. https://portal.aws.biochemistry.gwu.edu/bco/BCO_00026662). Ensure the id part ('00026662') is not in use : ")
    
@@ -233,10 +251,10 @@ def main():
    spec_version_input = input("Enter version of specification for this IEEE-2791 object (BCO) (Default is: https://w3id.org/ieee/ieee-2791-schema/) For default, enter nothing.: ")
    if spec_version_input.strip() != spec_version.strip() and spec_version_input.strip() != "":
       spec_version = spec_version_input
-   print("\n")
+#    print("\n")
    
    #provenance
-   print("Provenance Domain Information\n")
+   print("\n" + color.BOLD + "Provenance Domain Information\n" + color.END)
    name = input("Enter your name: ")
    now = datetime.now()
    created = now.strftime("%m/%d/%Y-%H:%M:%S")
@@ -257,24 +275,25 @@ def main():
       contributors.append(contributor(name = contributor_name, contribution = contribution))
       add_contributor = input("Add another contributor? y/n: ")
    provenance = provenance_domain(name = name, version = version, license = license, created = created, modified = modified, contributors = contributors)
-   print("\n")   
+#    print("\n")   
    
    #usability
-   print("Usability Domain Information \n")
+   print("\n" + color.BOLD + "Usability Domain Information \n" + color.END)
    use = input("What is the purpose of this computational workflow/analysis?: ")
    usability = usability_domain(use)
    
    #execution 
-   print("Execution Domain Information \n")
-   print("Enter script uris in the following format: uri1 uri2 uri3 uri4 \n")
-   scrpt = input("What is/are the uris for the script object used to perform computations?: ")
+   print(color.BOLD + "\nExecution Domain Information \n" + color.END)
+   print("Enter script uris in the following format: 'uri1 uri2 uri3 uri4' \n")
+   scrpt = input("Enter the uris for the script object used to perform computations?: ")
    scrpt = script(scrpt)
    script_driver = "shell"
-   script_driver_input = input("Enter script driver, the type of executable to perform commands in script in order to run the pipeline (Default is shell) Enter nothing for default.: ")
+   script_driver_input = input("\nEnter script driver, the type of executable to perform commands in script in order to run the pipeline (Default is shell) Enter nothing for default.: ")
    if script_driver_input.lower().strip() != script_driver.lower().strip() and script_driver_input.lower().strip() != "":
       script_driver = script_driver_input
    software_prerequisites = []
    add_software_prerequisite = "y"
+   print("\nSoftware prerequisites are necessary prerequisites such as libraries and tool versions that are needed to run the script to produce this BCO.\nThey have a name, version, and uri.\n")
    while(add_software_prerequisite.lower().strip() == "y"):
       sp_name = input("Enter software prerequisite name: ")
       sp_version = input("Enter software prerequisite version: ")
@@ -283,13 +302,14 @@ def main():
       add_software_prerequisite = input("Add another software prerequisite? y/n: ")
    external_data_endpoints = []
    add_external_data_endpoints = "y"
+   print("\nExternal data endpoints are requirements for network protocol endpoints used by a pipeline.\nThey have a name and a url.\n")
    while(add_external_data_endpoints.strip().lower() == "y"):
       ede_name = input("Enter external data endpoint name: ")
       ede_url = input("Enter external data endpoint url: ")
       external_data_endpoints.append(external_data_endpoint(name = ede_name, url = ede_url))
       add_external_data_endpoints = input("Add another external data endpoint? y/n: ")
    add_environment_variable = "y"
-   print("Enter environment variables in 'key value' format \n")
+   print("\nEnter environment variables in 'key value' format \n")
    environment_variables = []
    while(add_environment_variable.strip().lower() == "y"):
       key_value_pair = input("Enter environmental parameters that are useful to configure the execution environment on the target platform: ").lstrip().rstrip()
@@ -300,10 +320,10 @@ def main():
          print("There was an error with your input. Please try again.")
       add_environment_variable = input("Add another environment variable? y/n: ") 
    execution = execution_domain(environment_variables = environment_variables, script_driver = script_driver, software_prerequisites = software_prerequisites, external_data_endpoints = external_data_endpoints, script = scrpt)
-   print("\n")
+#    print("\n")
    
    #description
-   print("Description Domain Information \n")
+   print("\n" + color.BOLD + "Description Domain Information \n" + color.END)
    print("Format to enter keywords in: 'keywordA keywordB keywordC keywordD'")
    keywords = input("Enter biology research keywords in the specified format to aid in search-ability and description of this object: ").lstrip().rstrip().split(" ")
    pipeline_steps = []
@@ -321,10 +341,11 @@ def main():
          name = name_input
       description = input("Enter purpose of the tool: ")
       # version = input("Enter version of the tool: ")
-      print("Enter input file uris in the following format: 'uri1 uri2 uri3 uri4'\n")
+      print("\nEnter input file uris in the following format: 'uri1 uri2 uri3 uri4'\n")
       input_list_temp = input("Enter input file uris if this step uses input files: ").lstrip().rstrip().split(" ")
-      print("Enter output file uris in the following format: 'uri1 uri2 uri3 uri4'\n")
+      print("\nEnter output file uris in the following format: 'uri1 uri2 uri3 uri4'\n")
       output_list_temp = input("Enter output file uris if this step outputs to files: ").lstrip().rstrip().split(" ")
+      print()
       pipeline_steps.append(pipeline_step(step_number=step_number, name=name, description=description, input_list= input_list_temp, output_list = output_list_temp))
       if step_number == 1:
          for x in input_list_temp:
@@ -337,9 +358,9 @@ def main():
          
       step_number += 1  
    description = description_domain(keywords = keywords, pipeline_steps = pipeline_steps)
-   print("\n")
+#    print("\n")
    #IO 
-   print("Input Output (IO) Domain Information \n")
+   print(color.BOLD + "Input Output (IO) Domain Information \n" + color.END)
    inputs = []
    for x in input_list_master:
        inputs.append(x)
@@ -374,13 +395,19 @@ def main():
    except:
       print("error occured with printing") 
    
+   with open(output_filename + ".pkl", 'wb') as output_pickle_file:
+      pickle.dump(output_bco, output_pickle_file, pickle.HIGHEST_PROTOCOL)
+   
+#    with open(output_filename + ".pkl", 'rb') input_pickle_file: #to open saved pkl file 
+#       loaded_bco = pickle.load(input_pickle_file)
+   
    with open(output_filename, 'w') as json_output:
-#       try: 
-      json_string = BCOEncoder().encode(output_bco)
-      json_output.write(json_string)
-      json_output.close()
-#       except:
-         # print("error occured with outputting as a json file")
+      try: 
+         json_string = BCOEncoder().encode(output_bco)
+         json_output.write(json_string)
+         json_output.close()
+      except:
+         print("error occured with outputting as a json file")
 if __name__ == "__main__":
    main()
 
