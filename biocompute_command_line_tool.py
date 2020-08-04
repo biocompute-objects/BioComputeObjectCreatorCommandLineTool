@@ -2,6 +2,8 @@
 #BioCompute Object Creator Minimum Viable Product
 import os
 import json
+import sys
+import hashlib
 from json import JSONEncoder
 from pprint import pprint
 from datetime import datetime
@@ -188,8 +190,8 @@ class usability_domain():
       self.use = use #string
 
 class parametric_domain():
-   def __init__(self, parameter):
-       self.parameter= parameter #array
+   def __init__(self, parameters):
+       self.parameters= parameters #array
 class parameter:
    def __init__(self, param, value, step):
       self.param = param #string 
@@ -222,9 +224,25 @@ def main():
    #metadata
    print(color.CYAN + "Welcome to the BioCompute Command Line Tool. With this tool, you can automate some parts of BCO creation and work on creating a BCO directly from the command line. \nIf you make a mistake while creating your BCO, you can always edit that field in the output json file that represents your BCO.\n" + color.END)
    input_filename = r'' + input("Enter name of desired input file (Output of script command/typescript): ")
-   with open(input_filename, 'r') as file: 
-      data = file.read()
-   data = data[int(data.index("$")+1): int(data.index('\n'))]
+   data = ""
+   try:
+      with open(input_filename, 'r') as file: 
+         data = file.read()
+   except FileNotFoundError:
+      print(color.RED + "error: input file not found. please restart this tool with correct input file." + color.END)
+      sys.exit()
+   index_of_first_newline = 0
+   for x in range(0, len(data)):
+      if data[x] == "\n":
+         index_of_first_newline = x
+         break
+   data = data[index_of_first_newline+1:]
+   index_of_start = 0
+   for x in range(0, len(data)):
+       if data[x] == "$" or data[x] == "#": #user or root
+          index_of_start = x
+          break        
+   data = data[int(index_of_start+1): int(data.index('\n'))]
    print("\nPipeline: " + data)
 #    print("\n")
    confirmation = input("Confirm pipeline (y or n): ")
@@ -238,7 +256,7 @@ def main():
    
    output_filename = input("Enter name of desired output file (e.g. example_bco.json): ")
    
-   print(color.BOLD + "\nMetadata information\n" + color.END)
+   print(color.BOLD + "\nMetadata Information\n" + color.END)
    
    object_id = input("Enter unique BCO Object ID (e.g. https://portal.aws.biochemistry.gwu.edu/bco/BCO_00026662). Ensure the id part ('00026662') is not in use : ")
    
@@ -385,18 +403,84 @@ def main():
       outputs.append(output_subdomain_item(output, output_mediatype))
       add_output = input("Add an output file? y/n: ")
    io = io_domain(inputs, outputs) 
-   print("\n")
+#    print("\n")
    
    #from the orcid get the information (BONUS)
+   print(color.BOLD + "\nParametric Domain Information \n" + color.END)
+   print("This represents the list of NON-default parameters customizing the computational flow which can affect the output of the calculations.\nThese fields can be custom to each kind of analysis and are tied to a particular pipeline implementation.")
+   print("Parameters are composed of a param (specific variable for computational workflow), a value (non-default param value), and a step (specific step in workflow relevant to param and value)")
+   parameters = []
+   option_index = -1
+   partial_string = ""
+   param = ""
+   value = ""
+   step = ""
+   edit_parameter = ""
+   add_parameter = ""
+   delete_parameter = ""
+   for x in range(0, len(pipeline)):
+      print()
+      partial_string = ""
+      param = ""
+      value = ""
+      step = ""
+      edit_parameter = ""
+      add_parameter = ""
+      delete_parameter = ""
+      if " -" in pipeline[x]:
+         option_index = pipeline[x].index(" -") 
+         partial_string = pipeline[x][option_index+1:]
+         param = pipeline[x].split(" ")[0]
+         value = partial_string[0: partial_string.index(" ")]
+         step = str(x+1)
+
+      print("Current step number: {}".format(str(x+1)))
+      print()
+      print("param: ", param)
+      print("value: ", value)
+      print("step: ", step)
+      print("Current pipeline info: {}".format(pipeline[x]))
+      if param == "" and value == "" and step == "":
+         add_parameter = input("No parameter has been found. Is there a non-default parameter you wish to add? y/n: ")  
+         if add_parameter.strip().lower() == "y":
+            param = input("Enter param: ")
+            value = input("Enter value: ")
+            step = input("Enter step: ")          
+            parameters.append(parameter(param=param, value=value, step=step))    
+            continue        
+         else:
+            continue 
+             
+      delete_parameter = input("Would you like to delete the current parameter? (Note: you can edit parameter in the next step) y/n: ")
+      if delete_parameter.lower().strip() == "y":
+         param = ""
+         value = ""
+         step = ""
+         continue 
+      edit_parameter = input("Would you like to edit the current parameter? y/n: ")
+      if edit_parameter.strip().lower() == "y":
+         param = input("Enter param: ")
+         value = input("Enter value: ")
+         step = input("Enter step: ")
+         parameters.append(parameter(param=param, value=value, step=step))
+         
+   parametric = parametric_domain(parameters)   
+                
+   output_bco = BCO(provenance = provenance, usability = usability, description = description, execution = execution, io = io, object_id = object_id, spec_version = spec_version, etag = etag, parametric = parametric)
+   print(color.BOLD + "\nBCO Information" + color.END)
+   print(color.GREEN + "BCO created" + color.END)
    
-   output_bco = BCO(provenance = provenance, usability = usability, description = description, execution = execution, io = io, object_id = object_id, spec_version = spec_version, etag = etag)
    try:
-      print(output_bco) 
+      print(color.GREEN + "{}".format(output_bco) + color.END) 
+      print(color.GREEN + "BCO printed" + color.END)
    except:
-      print("error occured with printing") 
-   
-   with open(output_filename + ".pkl", 'wb') as output_pickle_file:
-      pickle.dump(output_bco, output_pickle_file, pickle.HIGHEST_PROTOCOL)
+      print(color.RED + "error occured with printing"+ color.END) 
+   try:
+      with open(output_filename + ".pkl", 'wb') as output_pickle_file:
+         pickle.dump(output_bco, output_pickle_file, pickle.HIGHEST_PROTOCOL)
+         print(color.GREEN + "BCO saved to .pkl file" + color.END) 
+   except:
+      print(color.RED + "error with saving BCO to .pkl file" + color.END)
    
 #    with open(output_filename + ".pkl", 'rb') input_pickle_file: #to open saved pkl file 
 #       loaded_bco = pickle.load(input_pickle_file)
@@ -406,8 +490,9 @@ def main():
          json_string = BCOEncoder().encode(output_bco)
          json_output.write(json_string)
          json_output.close()
+         print(color.GREEN + "BCO saved in .json format" + color.END) 
       except:
-         print("error occured with outputting as a json file")
+         print(color.RED + "error occured with outputting as a json file" + color.END)
 if __name__ == "__main__":
    main()
 
