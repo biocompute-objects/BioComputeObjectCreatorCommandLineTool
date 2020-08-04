@@ -1,0 +1,8 @@
+Script started on 2020-08-01 15:21:02-0400
+pranav@LAPTOP-CHO8EET5:/mnt/c/Users/pranav/Documents/GWU/BioCompute$ cat input.txt | grep "ham" | sed -n '/ham?$/p' > output.txt
+pranav@LAPTOP-CHO8EET5:/mnt/c/Users/pranav/Documents/GWU/BioCompute$ cat output.txt
+Green eggs and ham?
+pranav@LAPTOP-CHO8EET5:/mnt/c/Users/pranav/Documents/GWU/BioCompute$ exit
+exit
+
+Script done on 2020-08-01 15:21:51-0400
