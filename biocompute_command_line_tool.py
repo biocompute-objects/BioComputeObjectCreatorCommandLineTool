@@ -468,6 +468,7 @@ def main():
                 
    output_bco = BCO(provenance = provenance, usability = usability, description = description, execution = execution, io = io, object_id = object_id, spec_version = spec_version, etag = etag, parametric = parametric)
    print(color.BOLD + "\nBCO Information" + color.END)
+   print(color.CYAN + "You can edit the .json file if you made a mistake or would like to edit any fields in your BioCompute Object." + color.END)
    print(color.GREEN + "BCO created" + color.END)
    
    try:
