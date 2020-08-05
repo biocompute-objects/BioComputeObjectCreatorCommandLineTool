@@ -40,6 +40,11 @@ git clone https://github.com/p-m-ishra/BioCompute-Object-Creator-Command-Line-To
 
 ## Usage
 
+* Current Prerequisites
+  * Pipeline must be on first line of input after script started message (E.g. after this line: `Script started on 2020-08-01 15:21:02-0400`) 
+  * Pipeline must be one line long
+  * Symbol after working directory must be $ or # (E.g. `pranav@laptop:~$` or `root@laptop:~#`)
+
 Place `biocompute_command_line_tool.py` in the same directory as the output of the `script` command that recorded the computational workflow or analysis pipeline.
 
 Then run the following command:
@@ -51,10 +56,10 @@ python3 biocompute_command_line_tool.py
 
 ## Issues
 
-- Prompt user if they would like to change anything at the end
-- User specified etag (e.g. MD5, SHA-256)
-- Output to json file in valid BCO format
-- Check formatting for email strings
+* Prompt user if they would like to change anything at the end
+* User specified etag (e.g. MD5, SHA-256)
+* Output to json file in valid BCO format
+* Check formatting for email strings
 
 ## Contributing
 
