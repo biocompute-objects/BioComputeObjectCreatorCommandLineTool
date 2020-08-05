@@ -1,7 +1,6 @@
 # BioCompute Object Creator 
 
-[![license](https://github.com/p-m-ishra/BioCompute-Object-Creator-Command-Line-Tool-/blob/master/LICENSE)](LICENSE)
-[![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 This is a tool to create a BioCompute Object directly from the command line.
 
@@ -24,21 +23,19 @@ Additional BioCompute resources can be found [here](https://biocomputeobject.org
 
 ## Install
 
-This module's dependencies include the 'jsons' package in python which can be installed with 'python3 -m pip install jsons' 
+This module's dependencies include the `jsons` package in python which can be installed with `python3 -m pip install jsons` 
 
 ```
 ```
 
 ## Usage
 
-Place 'biocompute_command_line_tool.py' in the same directory as the output of the 'script' command that recorded the computational workflow or analysis pipeline.
+Place `biocompute_command_line_tool.py` in the same directory as the output of the `script` command that recorded the computational workflow or analysis pipeline.
 
 Then run the following command:
 ```
 python 3 biocompute_command_line_tool.py 
 ```
-
-Note: The `license` badge image link at the top of this file should be updated with the correct `:user` and `:repo`.
 
 ## API
 
@@ -47,8 +44,6 @@ Note: The `license` badge image link at the top of this file should be updated w
 See [the contributing file](CONTRIBUTING.md)!
 
 PRs accepted.
-
-Small note: If editing the Readme, please conform to the [standard-readme](https://github.com/RichardLitt/standard-readme) specification.
 
 ## License
 
