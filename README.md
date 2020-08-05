@@ -29,13 +29,13 @@ This tool's dependencies include the `jsons` package in python which can be inst
 Download this tool's code from github in same directory where you intend to use it or use the following command:
 
 ```
-wget https://github.com/p-m-ishra/BioCompute-Object-Creator-Command-Line-Tool-/blob/master/biocompute_command_line_tool.py
+wget https://github.com/p-m-ishra/BioComputeObjectCreatorCommandLineTool/blob/master/biocompute_command_line_tool.py
 ```
 
 If you would like to clone this repository: 
 
 ```
-git clone https://github.com/p-m-ishra/BioCompute-Object-Creator-Command-Line-Tool-.git
+git clone https://github.com/p-m-ishra/BioComputeObjectCreatorCommandLineTool.git
 ```
 
 ## Usage
