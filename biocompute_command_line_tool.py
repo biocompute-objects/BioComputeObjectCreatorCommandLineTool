@@ -2,6 +2,7 @@
 #BioCompute Object Creator Minimum Viable Product
 import os
 import json
+import jsons
 import sys
 import hashlib
 from json import JSONEncoder
@@ -487,13 +488,15 @@ def main():
 #       loaded_bco = pickle.load(input_pickle_file)
    
    with open(output_filename, 'w') as json_output:
-      try: 
-         json_string = BCOEncoder().encode(output_bco)
-         json_output.write(json_string)
-         json_output.close()
-         print(color.GREEN + "BCO saved in .json format" + color.END) 
-      except:
-         print(color.RED + "error occured with outputting as a json file" + color.END)
+#       try: 
+#          json_string = BCOEncoder().encode(output_bco)
+#          json_output.write(json_string)
+#          json_output.close()
+      # json_output.write(json.dumps(output_bco))
+      json_output.write(jsons.dumps(output_bco))
+      print(color.GREEN + "BCO saved in .json format" + color.END) 
+#       except:
+      # print(color.RED + "error occured with outputting as a json file" + color.END)
 if __name__ == "__main__":
    main()
 
