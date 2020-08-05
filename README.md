@@ -32,9 +32,11 @@ Download this tool's code from github in same directory where you intend to use 
 wget https://github.com/p-m-ishra/BioCompute-Object-Creator-Command-Line-Tool-/blob/master/biocompute_command_line_tool.py
 ```
 
-Clone this repository: 
+If you would like to clone this repository: 
 
-`git clone https://github.com/p-m-ishra/BioCompute-Object-Creator-Command-Line-Tool-.git`
+```
+git clone https://github.com/p-m-ishra/BioCompute-Object-Creator-Command-Line-Tool-.git
+```
 
 ## Usage
 
@@ -42,7 +44,7 @@ Place `biocompute_command_line_tool.py` in the same directory as the output of t
 
 Then run the following command:
 ```
-python 3 biocompute_command_line_tool.py 
+python3 biocompute_command_line_tool.py 
 ```
 
 ## API
