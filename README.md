@@ -24,10 +24,17 @@ Additional BioCompute resources can be found [here](https://biocomputeobject.org
 
 ## Install
 
-This module's dependencies include the `jsons` package in python which can be installed with `python3 -m pip install jsons` 
+This tool's dependencies include the `jsons` package in python which can be installed with `python3 -m pip install jsons` 
+
+Download this tool's code from github in same directory where you intend to use it or use the following command:
 
 ```
+wget https://github.com/p-m-ishra/BioCompute-Object-Creator-Command-Line-Tool-/blob/master/biocompute_command_line_tool.py
 ```
+
+Clone this repository: 
+
+`git clone https://github.com/p-m-ishra/BioCompute-Object-Creator-Command-Line-Tool-.git`
 
 ## Usage
 
