@@ -14,6 +14,7 @@ This tool creates an IEEE compliant [IEEE-2791 object](https://opensource.ieee.o
 - [API](#api)
 - [Contributing](#contributing)
 - [License](#license)
+- [Issues](#issues)
 
 ## Background
 
@@ -38,6 +39,12 @@ python 3 biocompute_command_line_tool.py
 ```
 
 ## API
+
+## Issues
+
+- Check formatting for email Prompt user if they would like to change anything at the end
+- User specified etag (e.g. MD5, SHA-256)
+- Output to json file in valid BCO format
 
 ## Contributing
 
