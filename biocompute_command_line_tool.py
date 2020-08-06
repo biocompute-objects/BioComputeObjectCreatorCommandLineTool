@@ -15,14 +15,14 @@ except ModuleNotFoundError:
 
 class BCO():
    def __init__(self, provenance, usability, description, execution, io, object_id, spec_version, etag = "new", parametric = None, error = None, extension = None):
-       self.provenance = provenance
-       self.usability = usability
-       self.extension = extension
-       self.description = description
-       self.execution = execution
-       self.parametric = parametric
-       self.io = io
-       self.error = error
+       self.provenance_domain = provenance
+       self.usability_domain = usability
+       self.extension_domain = extension
+       self.description_domain = description
+       self.execution_domain = execution
+       self.parametric_domain = parametric
+       self.io_domain = io
+       self.error_domain = error
        self.object_id = object_id
        self.spec_version = spec_version
        self.etag = etag
@@ -274,7 +274,7 @@ def main():
    
    #provenance
    print("\n" + color.BOLD + "Provenance Domain Information\n" + color.END)
-   name = input("Enter your name: ")
+   name = input("Enter name of BioCompute Object: ")
    now = datetime.now()
    created = now.strftime("%m/%d/%Y-%H:%M:%S")
    modified = now.strftime("%m/%d/%Y-%H:%M:%S")
