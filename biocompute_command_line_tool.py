@@ -172,15 +172,15 @@ class output_subdomain_item:
       self.mediatype = mediatype #string
       
 class error_domain():
-   def __init__(self, empirical_error, algorithmic_error):
-      self.empirical_error = empirical_error #object  
-      self.algorithmic_error = algorithmic_error #object
-class empirical_error():
-   def __init__(self, description):
-      self.description = description #string
-class algorithmic_error():
-   def __init__(self, description):  
-      self.description = description #string
+   def __init__(self, empirical, algorithmic):
+      self.empirical_error = empirical #object  
+      self.algorithmic_error = algorithmic #object
+# class empirical_error():
+#    def __init__(self, empirical_error):
+#       self.empirical_error = empirical_error #string
+# class algorithmic_error():
+#    def __init__(self, algorithmic_error):  
+#       self.algorithmic_error = algorithmic_error #string
 
 # class extension_domain():
 #    def __init__(self, extension_schema):
@@ -481,8 +481,52 @@ def main():
       parameters.append(parameter(param=param, value=value, step=step))
          
    parametric = parameters# parametric_domain(parameters)   
+   
+   #Error 
+   print(color.BOLD + "\nError Domain Information \n" + color.END)
+   emp_error = ""
+   alg_error = ""
+   empirical_error = {}
+   algorithmic_error = {}
+   add_error_domain = input("This domain is optional. Would you like to add an error domain? y/n: ")
+   add_emp_error = ""
+   add_alg_error = ""
+   if add_error_domain.strip().lower() == "y":
+      print("\nEmpirical error is defined as empirically determined values such as limits of detectability, false positives, false negatives, statistical confidence of outcomes, etc.\nThis can be measured by running the algorithm on multiple data samples of the usability domain or through the use of carefully designed in-silico data.\n") 
+      add_emp_error = input("Would you like to add an empirical error subdomain for this BCO? y/n: ")
+      while(add_emp_error.strip().lower() == "y"):
+         print("An example of an input would be: 'false_negative_alignment_hits <0.0010'")
+         emp_error = input("Enter an empirical error 'key value' pair for this BCO: ")
+         try:
+            empirical_error[emp_error.split(" ")[0]] = emp_error.split(" ")[1]
+         except:
+            print("Error with input. Please retry or press 'n' at the next command.")
+         add_emp_error = input("Would you like to add another empirical error 'key value' pair for this BCO? y/n: ")
+      print("\nAlgorithmic error is defined as descriptive of errors that originate by fuzziness of the algorithms, driven by stochastic processes, in dynamically parallelized multi-threaded executions, or in machine learning methodologies where the state of the machine can affect the outcome.\n")
+      add_alg_error = input("Would you like to add an algorithmic error subdomain for this BCO? y/n: ")
+      while(add_alg_error.strip().lower() == "y"):
+         print("An example of an input would be: 'algorithm description' or 'algorithm json_schema_uri' where the json_schema_uri would be uri for algorithm description.")
+         alg_error = input("Enter an algorithmic error description for this BCO: ")
+         try:
+            algorithmic_error[alg_error.split(" ")[0]] = alg_error.split(" ")[1]
+         except:
+            print("Error with input. Please retry or press 'n' at the next command.")
+         add_alg_error = input("Would you like to add another algorithmic error 'algorithm description' or 'algorithm json_schema_uri' pair for this BCO? y/n: ")         
+      
+   error = error_domain(empirical=empirical_error, algorithmic=algorithmic_error)
+   
+   #Extension
+   print(color.BOLD + "\nExtension Domain Information \n" + color.END)
+   extension = []
+   add_extension_domain = input("This domain is optional. Would you like to add an extension domain? y/n: ")
+   if add_extension_domain.strip().lower() == "y":
+      while add_extension_domain.strip().lower() == "y":
+         extension.append(input("Enter a uri that points to an extension json schema: ").lstrip().rstrip())
+         add_extension_domain = input("Would you like to add another extension json schema? y/n: ")
+   
+   
                 
-   output_bco = BCO(provenance = provenance, usability = usability, description = description, execution = execution, io = io, object_id = object_id, spec_version = spec_version, etag = etag, parametric = parametric)
+   output_bco = BCO(provenance = provenance, usability = usability, description = description, execution = execution, io = io, object_id = object_id, spec_version = spec_version, etag = etag, parametric = parametric, error=error, extension=extension)
    print(color.BOLD + "\nBCO Information" + color.END)
    print(color.CYAN + "You can edit the .json file if you made a mistake or would like to edit any fields in your BioCompute Object." + color.END)
    print(color.GREEN + "BCO created" + color.END)
