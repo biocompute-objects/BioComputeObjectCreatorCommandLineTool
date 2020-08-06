@@ -146,9 +146,9 @@ class environment_variable():
 class environment_varibles():
    def __init__(self, environment_variables):
       self.environment_variables = environment_variables
-class script():
+class script_item():
    def __init__(self, uri):
-      self.uri = uri #NOT uri object ($ref)
+      self.uri = uri 
 class software_prerequisite():
    def __init__(self, version, name, uri):
       self.uri = uri #NOT uri object ($ref) 
@@ -307,9 +307,12 @@ def main():
    
    #execution 
    print(color.BOLD + "\nExecution Domain Information" + color.END)
-#    print("Enter script uris in the following format: 'uri1 uri2 uri3 uri4' \n")
-   scrpt = input("\nEnter the uri for the script object used to perform computations?: ")
-   scrpt = script(uri(uri=scrpt))
+   print("Enter script uris in the following format: 'uri1 uri2 uri3 uri4'")
+   script_input = input("\nEnter the uris for the script objects used to perform computations: ")
+   script = []
+   script_list = script_input.lstrip().rstrip().split(" ")
+   for x in script_list:
+      script.append(script_item(uri(uri=x)))
    script_driver = "shell"
    script_driver_input = input("\nEnter script driver, the type of executable to perform commands in script in order to run the pipeline (Default is shell) Enter nothing for default.: ")
    if script_driver_input.lower().strip() != script_driver.lower().strip() and script_driver_input.lower().strip() != "":
@@ -342,7 +345,7 @@ def main():
       except:
          print("There was an error with your input. Please try again.")
       add_environment_variable = input("Add another environment variable? y/n: ") 
-   execution = execution_domain(environment_variables = environment_variables, script_driver = script_driver, software_prerequisites = software_prerequisites, external_data_endpoints = external_data_endpoints, script = scrpt)
+   execution = execution_domain(environment_variables = environment_variables, script_driver = script_driver, software_prerequisites = software_prerequisites, external_data_endpoints = external_data_endpoints, script = script)
    
    #description
    print("\n" + color.BOLD + "Description Domain Information \n" + color.END)
