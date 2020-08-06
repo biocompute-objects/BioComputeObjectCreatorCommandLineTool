@@ -114,7 +114,7 @@ class prerequisite():
       self.uri = uri #$ref, NOT uri object ($ref)
       self.name = name #string
 class uri(): 
-   def __init__(self, filename, uri, sha1_checksum, access_time):
+   def __init__(self, uri, filename=None, sha1_checksum=None, access_time=None):
       self.filename = filename
       self.uri = uri
       self.sha1_checksum = sha1_checksum
@@ -291,7 +291,7 @@ def main():
       contributor_name = input("Enter name of contributor: ")
       print("Contribution Types: ", " ".join(contributions)) 
       contribution = input("Enter contribution type: ").strip()
-      contributors.append(contributor(name = contributor_name, contribution = contribution))
+      contributors.append(contributor(name = contributor_name, contribution = list(contribution)))
       add_contributor = input("Add another contributor? y/n: ")
    provenance = provenance_domain(name = name, version = version, license = license, created = created, modified = modified, contributors = contributors)
 #    print("\n")   
@@ -299,13 +299,14 @@ def main():
    #usability
    print("\n" + color.BOLD + "Usability Domain Information \n" + color.END)
    use = input("What is the purpose of this computational workflow/analysis?: ")
-   usability = usability_domain(use)
+#    usability = usability_domain(use)
+   usability = list(use)
    
    #execution 
-   print(color.BOLD + "\nExecution Domain Information \n" + color.END)
-   print("Enter script uris in the following format: 'uri1 uri2 uri3 uri4' \n")
-   scrpt = input("Enter the uris for the script object used to perform computations?: ")
-   scrpt = script(scrpt)
+   print(color.BOLD + "\nExecution Domain Information" + color.END)
+#    print("Enter script uris in the following format: 'uri1 uri2 uri3 uri4' \n")
+   scrpt = input("\nEnter the uri for the script object used to perform computations?: ")
+   scrpt = script(uri(uri=scrpt))
    script_driver = "shell"
    script_driver_input = input("\nEnter script driver, the type of executable to perform commands in script in order to run the pipeline (Default is shell) Enter nothing for default.: ")
    if script_driver_input.lower().strip() != script_driver.lower().strip() and script_driver_input.lower().strip() != "":
@@ -317,7 +318,7 @@ def main():
       sp_name = input("Enter software prerequisite name: ")
       sp_version = input("Enter software prerequisite version: ")
       sp_uri = input("Enter software prerequisite uri: ")
-      software_prerequisites.append(software_prerequisite(version = sp_version, name = sp_name, uri = sp_uri))
+      software_prerequisites.append(software_prerequisite(version = sp_version, name = sp_name, uri = uri(uri=sp_uri)))
       add_software_prerequisite = input("Add another software prerequisite? y/n: ")
    external_data_endpoints = []
    add_external_data_endpoints = "y"
@@ -339,12 +340,11 @@ def main():
          print("There was an error with your input. Please try again.")
       add_environment_variable = input("Add another environment variable? y/n: ") 
    execution = execution_domain(environment_variables = environment_variables, script_driver = script_driver, software_prerequisites = software_prerequisites, external_data_endpoints = external_data_endpoints, script = scrpt)
-#    print("\n")
    
    #description
    print("\n" + color.BOLD + "Description Domain Information \n" + color.END)
    print("Format to enter keywords in: 'keywordA keywordB keywordC keywordD'")
-   keywords = input("Enter biology research keywords in the specified format to aid in search-ability and description of this object: ").lstrip().rstrip().split(" ")
+   keywords = input("Enter biology research keywords in the specified format to aid in search-ability and description of this object: ").lstrip().rstrip()# .split(" ")
    pipeline_steps = []
    input_list_description_domain = []
    output_list_description_domain = []
@@ -362,51 +362,58 @@ def main():
       # version = input("Enter version of the tool: ")
       print("\nEnter input file uris in the following format: 'uri1 uri2 uri3 uri4'\n")
       input_list_temp = input("Enter input file uris if this step uses input files: ").lstrip().rstrip().split(" ")
+      for x in range(len(input_list_temp)):
+          input_list_temp[x] = uri(uri=input_list_temp[x])
       print("\nEnter output file uris in the following format: 'uri1 uri2 uri3 uri4'\n")
       output_list_temp = input("Enter output file uris if this step outputs to files: ").lstrip().rstrip().split(" ")
+      for x in range(len(output_list_temp)):
+         output_list_temp[x] = uri(uri=output_list_temp[x])
       print()
       pipeline_steps.append(pipeline_step(step_number=step_number, name=name, description=description, input_list= input_list_temp, output_list = output_list_temp))
       if step_number == 1:
          for x in input_list_temp:
-            if x!= "":
+            if x.uri!= "":
                input_list_master.append(x)
       if step_number == len(pipeline):
          for x in output_list_temp:
-            if x != "":
+            if x.uri != "":
                output_list_master.append(x)
          
       step_number += 1  
    description = description_domain(keywords = keywords, pipeline_steps = pipeline_steps)
-#    print("\n")
+
    #IO 
    print(color.BOLD + "Input Output (IO) Domain Information \n" + color.END)
    inputs = []
    for x in input_list_master:
        inputs.append(x)
          
-   print("Current input list: ", ", ".join(inputs))
+   print("Current input list: ")
+   for x in inputs:
+      print(x.uri)
    add_input = input("Do you want to add additional input files? y/n: ")
    while(add_input.strip().lower() == "y"):
       input_file_uri = input("Enter input file uri: ")
-      inputs.append(input_file_uri)
+      inputs.append(uri(uri=input_file_uri))
       add_input = input("Add an input file? y/n: ")
          
-   print("Current output list: ", ", ".join(output_list_master))
+   print("Current output list: ")
+   for x in output_list_master:
+      print(x.uri)
    outputs = []
    for output in output_list_master: 
-      print(output)
+      print(output.uri)
       output_mediatype = input("Enter output file mediatype for this output file: ")
-      outputs.append(output_subdomain_item(output, output_mediatype))
+      outputs.append(output_subdomain_item(output=output, mediatype=output_mediatype))
    add_output = input("Do you want to add additional output files? y/n: ")
    while(add_output.strip().lower() == "y"):
       output = input("Enter output file uri: ")
       output_mediatype = input("Enter output file mediatype: ")
-      outputs.append(output_subdomain_item(output, output_mediatype))
+      outputs.append(output_subdomain_item(output=uri(uri=output), mediatype=output_mediatype))
       add_output = input("Add an output file? y/n: ")
    io = io_domain(inputs, outputs) 
-#    print("\n")
-   
-   #from the orcid get the information (BONUS)
+      
+   #parametric
    print(color.BOLD + "\nParametric Domain Information \n" + color.END)
    print("This represents the list of NON-default parameters customizing the computational flow which can affect the output of the calculations.\nThese fields can be custom to each kind of analysis and are tied to a particular pipeline implementation.")
    print("Parameters are composed of a param (specific variable for computational workflow), a value (non-default param value), and a step (specific step in workflow relevant to param and value)")
@@ -465,7 +472,7 @@ def main():
          step = input("Enter step: ")
          parameters.append(parameter(param=param, value=value, step=step))
          
-   parametric = parametric_domain(parameters)   
+   parametric = parameters# parametric_domain(parameters)   
                 
    output_bco = BCO(provenance = provenance, usability = usability, description = description, execution = execution, io = io, object_id = object_id, spec_version = spec_version, etag = etag, parametric = parametric)
    print(color.BOLD + "\nBCO Information" + color.END)
