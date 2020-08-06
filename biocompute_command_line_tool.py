@@ -211,11 +211,13 @@ class color:
    UNDERLINE = '\033[4m'
    END = '\033[0m'
 
+def remove_nulls(d):
+    return {k: v for k, v in d.items() if v is not None}
 
 def main():
-   data = {}
-   with open('blank_bco.json') as json_file: #testing 
-      data = json.load(json_file)
+#    data = {}
+#    with open('blank_bco.json') as json_file: #testing 
+#       data = json.load(json_file)
       #print(data)
    #insert code below 
    
@@ -548,16 +550,26 @@ def main():
    
 #    with open(output_filename + ".pkl", 'rb') input_pickle_file: #to open saved pkl file 
 #       loaded_bco = pickle.load(input_pickle_file)
-   
+   new_data = ""
    with open(output_filename, 'w') as json_output:
+       new_data = jsons.dumps(output_bco)
+       res = json.loads(new_data, object_hook=remove_nulls)
+       json.dump(res, json_output)
+        
 #       try: 
 #          json_string = BCOEncoder().encode(output_bco)
 #          json_output.write(json_string)
 #          json_output.close()
       # json_output.write(json.dumps(output_bco))
-      json_output.write(jsons.dumps(output_bco))
-      print(color.GREEN + "BCO saved in .json format" + color.END) 
+#       json_output.write(jsons.dumps(output_bco)) # CORRECT
+       print(color.GREEN + "BCO saved in .json format" + color.END) # CORRECT
 #       except:
+#    new_data = ""
+#    with open(output_filename, 'r') as json_input:
+#       new_data = json.loads(json_input, object_hook=remove_nulls)
+#    with open(output_filename, 'w') as json_output:
+#       json_output.truncate(0)
+#       json_output.write(new_data) 
       # print(color.RED + "error occured with outputting as a json file" + color.END)
 if __name__ == "__main__":
    main()
