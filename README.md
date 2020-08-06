@@ -58,7 +58,6 @@ python3 biocompute_command_line_tool.py
 
 * Prompt user if they would like to change anything at the end
 * User specified etag (e.g. MD5, SHA-256)
-* Output to json file in valid BCO format
 * Check formatting for email strings
 * Get information from ORCID and API
 
