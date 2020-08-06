@@ -52,6 +52,12 @@ Then run the following command:
 python3 biocompute_command_line_tool.py 
 ```
 
+Navigate to [BioCompute Portal](https://portal.aws.biochemistry.gwu.edu/bco/new/form#!)
+
+Click `edit json` and paste the output from the json file.
+
+Finally, click `submit` to create your BioCompute Object.
+
 ## API
 
 ## Issues
