@@ -555,7 +555,7 @@ def main():
        try:
           new_data = jsons.dumps(output_bco)
           res = json.loads(new_data, object_hook=remove_nulls)
-          json.dump(res, json_output)
+          json.dump(res, json_output, indent = 4, sort_keys=True)
           print(color.GREEN + "BCO saved in .json format" + color.END) # CORRECT
        except:
          print(color.RED + "error with saving BCO to .json file" + color.END)
