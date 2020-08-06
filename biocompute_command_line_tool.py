@@ -163,12 +163,12 @@ class io_domain():
    def __init__(self, input_subdomain, output_subdomain):
       self.input_subdomain = input_subdomain #array of inputs
       self.output_subdomain = output_subdomain #array of outputs
-# class input_subdomain:
-#    def __init__(self, inputs):
-#       self.inputs = inputs #NOT uri object ($ref)
+class input_subdomain_item:
+   def __init__(self, uri):
+      self.uri = uri 
 class output_subdomain_item:
-   def __init__(self, output, mediatype):
-      self.output = output #NOT uri object ($ref)
+   def __init__(self, uri, mediatype):
+      self.uri = uri #NOT uri object ($ref)
       self.mediatype = mediatype #string
       
 class error_domain():
@@ -190,9 +190,9 @@ class usability_domain():
    def __init__(self, use):
       self.use = use #string
 
-class parametric_domain():
-   def __init__(self, parameters):
-       self.parameters= parameters #array
+# class parametric_domain():
+#    def __init__(self, parameters):
+#        self.parameters= parameters #array
 class parameter:
    def __init__(self, param, value, step):
       self.param = param #string 
@@ -290,8 +290,10 @@ def main():
    while(add_contributor.lower().strip() == "y"):
       contributor_name = input("Enter name of contributor: ")
       print("Contribution Types: ", " ".join(contributions)) 
-      contribution = input("Enter contribution type: ").strip()
-      contributors.append(contributor(name = contributor_name, contribution = list(contribution)))
+      contribution_input = input("Enter contribution type: ").strip()
+      contribution = []
+      contribution.append(contribution_input)
+      contributors.append(contributor(name = contributor_name, contribution = contribution))
       add_contributor = input("Add another contributor? y/n: ")
    provenance = provenance_domain(name = name, version = version, license = license, created = created, modified = modified, contributors = contributors)
 #    print("\n")   
@@ -300,7 +302,8 @@ def main():
    print("\n" + color.BOLD + "Usability Domain Information \n" + color.END)
    use = input("What is the purpose of this computational workflow/analysis?: ")
 #    usability = usability_domain(use)
-   usability = list(use)
+   usability = []
+   usability.append(use)
    
    #execution 
    print(color.BOLD + "\nExecution Domain Information" + color.END)
@@ -344,7 +347,9 @@ def main():
    #description
    print("\n" + color.BOLD + "Description Domain Information \n" + color.END)
    print("Format to enter keywords in: 'keywordA keywordB keywordC keywordD'")
-   keywords = input("Enter biology research keywords in the specified format to aid in search-ability and description of this object: ").lstrip().rstrip()# .split(" ")
+   keywords_input = input("Enter biology research keywords in the specified format to aid in search-ability and description of this object: ").lstrip().rstrip()# .split(" ")
+   keywords = []
+   keywords.append(keywords_input)
    pipeline_steps = []
    input_list_description_domain = []
    output_list_description_domain = []
@@ -386,30 +391,31 @@ def main():
    print(color.BOLD + "Input Output (IO) Domain Information \n" + color.END)
    inputs = []
    for x in input_list_master:
-       inputs.append(x)
+       inputs.append(input_subdomain_item(uri=x))
          
    print("Current input list: ")
    for x in inputs:
-      print(x.uri)
+      print(x.uri.uri)
    add_input = input("Do you want to add additional input files? y/n: ")
    while(add_input.strip().lower() == "y"):
       input_file_uri = input("Enter input file uri: ")
-      inputs.append(uri(uri=input_file_uri))
+      inputs.append(input_subdomain_item(uri = uri(uri=input_file_uri)))
       add_input = input("Add an input file? y/n: ")
          
    print("Current output list: ")
    for x in output_list_master:
       print(x.uri)
+   print()
    outputs = []
    for output in output_list_master: 
       print(output.uri)
       output_mediatype = input("Enter output file mediatype for this output file: ")
-      outputs.append(output_subdomain_item(output=output, mediatype=output_mediatype))
+      outputs.append(output_subdomain_item(uri=output, mediatype=output_mediatype))
    add_output = input("Do you want to add additional output files? y/n: ")
    while(add_output.strip().lower() == "y"):
       output = input("Enter output file uri: ")
       output_mediatype = input("Enter output file mediatype: ")
-      outputs.append(output_subdomain_item(output=uri(uri=output), mediatype=output_mediatype))
+      outputs.append(output_subdomain_item(uri=uri(uri=output), mediatype=output_mediatype))
       add_output = input("Add an output file? y/n: ")
    io = io_domain(inputs, outputs) 
       
@@ -471,6 +477,8 @@ def main():
          value = input("Enter value: ")
          step = input("Enter step: ")
          parameters.append(parameter(param=param, value=value, step=step))
+      
+      parameters.append(parameter(param=param, value=value, step=step))
          
    parametric = parameters# parametric_domain(parameters)   
                 
