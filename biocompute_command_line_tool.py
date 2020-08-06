@@ -533,7 +533,7 @@ def main():
                 
    output_bco = BCO(provenance = provenance, usability = usability, description = description, execution = execution, io = io, object_id = object_id, spec_version = spec_version, etag = etag, parametric = parametric, error=error, extension=extension)
    print(color.BOLD + "\nBCO Information" + color.END)
-   print(color.CYAN + "You can edit the .json file if you made a mistake or would like to edit any fields in your BioCompute Object." + color.END)
+   print(color.CYAN + "You can edit the output .json file if you made a mistake or would like to edit any fields in your BioCompute Object." + color.END)
    print(color.GREEN + "BCO created" + color.END)
    
    try:
@@ -541,28 +541,31 @@ def main():
       print(color.GREEN + "BCO printed" + color.END)
    except:
       print(color.RED + "error occured with printing"+ color.END) 
-   try:
-      with open(output_filename + ".pkl", 'wb') as output_pickle_file:
-         pickle.dump(output_bco, output_pickle_file, pickle.HIGHEST_PROTOCOL)
-         print(color.GREEN + "BCO saved to .pkl file" + color.END) 
-   except:
-      print(color.RED + "error with saving BCO to .pkl file" + color.END)
+#    try:
+#       with open(output_filename + ".pkl", 'wb') as output_pickle_file:
+#          pickle.dump(output_bco, output_pickle_file, pickle.HIGHEST_PROTOCOL)
+#          print(color.GREEN + "BCO saved to .pkl file" + color.END) 
+#    except:
+#       print(color.RED + "error with saving BCO to .pkl file" + color.END)
    
 #    with open(output_filename + ".pkl", 'rb') input_pickle_file: #to open saved pkl file 
 #       loaded_bco = pickle.load(input_pickle_file)
    new_data = ""
    with open(output_filename, 'w') as json_output:
-       new_data = jsons.dumps(output_bco)
-       res = json.loads(new_data, object_hook=remove_nulls)
-       json.dump(res, json_output)
-        
+       try:
+          new_data = jsons.dumps(output_bco)
+          res = json.loads(new_data, object_hook=remove_nulls)
+          json.dump(res, json_output)
+          print(color.GREEN + "BCO saved in .json format" + color.END) # CORRECT
+       except:
+         print(color.RED + "error with saving BCO to .json file" + color.END)
+
 #       try: 
 #          json_string = BCOEncoder().encode(output_bco)
 #          json_output.write(json_string)
 #          json_output.close()
       # json_output.write(json.dumps(output_bco))
 #       json_output.write(jsons.dumps(output_bco)) # CORRECT
-       print(color.GREEN + "BCO saved in .json format" + color.END) # CORRECT
 #       except:
 #    new_data = ""
 #    with open(output_filename, 'r') as json_input:
