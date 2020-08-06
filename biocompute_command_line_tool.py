@@ -199,6 +199,10 @@ class parameter:
       self.value = value #string 
       self.step = step #string 
 
+class extension_domain_item:
+   def __init__(self, extension_schema):
+      self.extension_schema = extension_schema
+
 class color:
    PURPLE = '\033[95m'
    CYAN = '\033[96m'
@@ -525,12 +529,10 @@ def main():
    extension = []
    add_extension_domain = input("This domain is optional. Would you like to add an extension domain? y/n: ")
    if add_extension_domain.strip().lower() == "y":
-      while add_extension_domain.strip().lower() == "y":
-         extension.append(input("Enter a uri that points to an extension json schema: ").lstrip().rstrip())
+      while add_extension_domain.strip().lower() == "y":       
+         extension.append(extension_domain_item(extension_schema=input("Enter a uri that points to an extension json schema: ").lstrip().rstrip()))
          add_extension_domain = input("Would you like to add another extension json schema? y/n: ")
-   
-   
-                
+                   
    output_bco = BCO(provenance = provenance, usability = usability, description = description, execution = execution, io = io, object_id = object_id, spec_version = spec_version, etag = etag, parametric = parametric, error=error, extension=extension)
    print(color.BOLD + "\nBCO Information" + color.END)
    print(color.CYAN + "You can edit the output .json file if you made a mistake or would like to edit any fields in your BioCompute Object." + color.END)
