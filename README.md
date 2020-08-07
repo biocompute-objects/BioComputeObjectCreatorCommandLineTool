@@ -63,7 +63,6 @@ Finally, click `submit` to create your BioCompute Object.
 ## Issues
 
 * Prompt user if they would like to change anything at the end
-* User specified etag (e.g. MD5, SHA-256)
 * Check formatting for email strings
 * Get information from ORCID and API
 
