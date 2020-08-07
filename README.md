@@ -12,9 +12,10 @@ This tool creates an IEEE compliant [IEEE-2791 object](https://opensource.ieee.o
 - [Install](#install)
 - [Usage](#usage)
 - [API](#api)
+- [Documentation](#documentation)
+- [Issues] (#issues)
 - [Contributing](#contributing)
 - [License](#license)
-- [Issues](#issues)
 
 ## Background
 
