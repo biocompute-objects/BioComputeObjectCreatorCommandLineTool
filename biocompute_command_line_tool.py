@@ -268,9 +268,10 @@ def main():
    object_id = input("Enter unique BCO Object ID (e.g. https://portal.aws.biochemistry.gwu.edu/bco/BCO_00026662). Ensure the id part ('00026662') is not in use : ")
    
    etag = "new" 
-   etag_input = input("Enter etag value (default is 'new') For default, enter nothing.: ")
-   if etag_input.strip() != etag.strip() and etag_input.strip() !=  "":
-      etag = etag_input
+#    etag_input = input("Enter etag value (default is 'new') For default, enter nothing.: ")
+#    if etag_input.strip() != etag.strip() and etag_input.strip() !=  "":
+#       etag = etag_input
+   etag_input = input("What type of hash would you like to hash your file with? Enter the number associated with the hash: MD5 (1), SHA1 (2), or SHA256 (3): ").strip().lower()
       
    spec_version = "https://w3id.org/ieee/ieee-2791-schema/"
    spec_version_input = input("Enter version of specification for this IEEE-2791 object (BCO) (Default is: https://w3id.org/ieee/ieee-2791-schema/) For default, enter nothing.: ")
@@ -533,7 +534,7 @@ def main():
          extension.append(extension_domain_item(extension_schema=input("Enter a uri that points to an extension json schema: ").lstrip().rstrip()))
          add_extension_domain = input("Would you like to add another extension json schema? y/n: ")
                    
-   output_bco = BCO(provenance = provenance, usability = usability, description = description, execution = execution, io = io, object_id = object_id, spec_version = spec_version, etag = etag, parametric = parametric, error=error, extension=extension)
+   output_bco = BCO(provenance = provenance, usability = usability, description = description, execution = execution, io = io, object_id = None, spec_version = None, etag = None, parametric = parametric, error=error, extension=extension)
    print(color.BOLD + "\nBCO Information" + color.END)
    print(color.CYAN + "You can edit the output .json file if you made a mistake or would like to edit any fields in your BioCompute Object." + color.END)
    print(color.GREEN + "BCO created" + color.END)
@@ -558,10 +559,43 @@ def main():
           new_data = jsons.dumps(output_bco)
           res = json.loads(new_data, object_hook=remove_nulls)
           json.dump(res, json_output, indent = 4, sort_keys=True)
+          print(color.GREEN + "BCO initially saved in .json format" + color.END) # CORRECT
+       except:
+         print(color.RED + "error with initially saving BCO to .json file" + color.END)
+   BUF_SIZE = 1000
+   md5 = hashlib.md5()
+   sha1 = hashlib.sha1()
+   sha256 = hashlib.sha256()
+   with open(output_filename, 'rb') as f:
+      while True: 
+          data = f.read(BUF_SIZE)
+          if not data:
+            break
+          md5.update(data)
+          sha1.update(data)
+          sha256.update(data)
+          
+   if etag_input == "1":
+      etag = md5.hexdigest()
+   elif etag_input == "2":
+      etag = sha1.hexdigest()
+   elif etag_input == "3":
+      etag = sha256.hexdigest()
+      
+   with open(output_filename, 'w') as f:
+      f.truncate(0)
+      f.close()
+   
+   output_bco = BCO(provenance = provenance, usability = usability, description = description, execution = execution, io = io, object_id = object_id, spec_version = spec_version, etag = etag, parametric = parametric, error=error, extension=extension)
+   with open(output_filename, 'w') as json_output:
+       try:
+          new_data = jsons.dumps(output_bco)
+          res = json.loads(new_data, object_hook=remove_nulls)
+          json.dump(res, json_output, indent = 4, sort_keys=True)
           print(color.GREEN + "BCO saved in .json format" + color.END) # CORRECT
        except:
-         print(color.RED + "error with saving BCO to .json file" + color.END)
-
+         print(color.RED + "error with saving BCO to .json file" + color.END) 
+         
 #       try: 
 #          json_string = BCOEncoder().encode(output_bco)
 #          json_output.write(json_string)
