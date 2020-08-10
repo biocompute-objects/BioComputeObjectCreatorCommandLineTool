@@ -59,8 +59,6 @@ Click `edit json` and paste the output from the json file.
 
 Finally, click `submit` to create your BioCompute Object.
 
-For a walkthrough of the command line portion of this tool, click [here](https://drive.google.com/file/d/1ivy-4i-TMmwSJQKQf0d_aY0NuiPQF50S/view?usp=sharing).
-
 ## API
 
 ## Documentation
