@@ -487,6 +487,7 @@ def main():
          value = input("Enter value: ")
          step = input("Enter step: ")
          parameters.append(parameter(param=param, value=value, step=step))
+         continue
       
       parameters.append(parameter(param=param, value=value, step=step))
          
@@ -612,5 +613,3 @@ def main():
       # print(color.RED + "error occured with outputting as a json file" + color.END)
 if __name__ == "__main__":
    main()
-
-      
