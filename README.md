@@ -46,7 +46,7 @@ git clone https://github.com/p-m-ishra/BioComputeObjectCreatorCommandLineTool.gi
   * Pipeline must be one line long
   * Symbol after working directory must be $ or # (E.g. `pranav@laptop:~$` or `root@laptop:~#`)
 
-A demo of using this tool can be found [here](https://drive.google.com/file/d/1NPw-CcfMkGLqKFbO7OPF9djmEmE3HjoW/view?usp=sharing).
+This tool's walkthrough/demo can be found [here](https://drive.google.com/file/d/1NPw-CcfMkGLqKFbO7OPF9djmEmE3HjoW/view?usp=sharing).
 
 Place `biocompute_command_line_tool.py` in the same directory as the output of the `script` command that recorded the computational workflow or analysis pipeline.
 
