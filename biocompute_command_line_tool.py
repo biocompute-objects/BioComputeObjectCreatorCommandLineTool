@@ -253,7 +253,7 @@ def main():
    print("\nPipeline: " + data)
 #    print("\n")
    confirmation = input("Confirm pipeline (y or n): ")
-   if confirmation.lower() == "n":
+   if confirmation.strip().lower() != "y":
       data = input("Enter the correct pipeline: ")
       
    pipeline = data.split("|")
