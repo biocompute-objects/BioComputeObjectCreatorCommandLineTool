@@ -253,7 +253,7 @@ def main():
    print("\nPipeline: " + data)
 #    print("\n")
    confirmation = input("Confirm pipeline (y or n): ")
-   if confirmation.lower() == "n":
+   if confirmation.strip().lower() != "y":
       data = input("Enter the correct pipeline: ")
       
    pipeline = data.split("|")
@@ -281,6 +281,8 @@ def main():
    
    #provenance
    print("\n" + color.BOLD + "Provenance Domain Information\n" + color.END)
+   print(color.CYAN + "You are required to enter name, the license, the version, and the contributors for this BCO." + color.END)
+   print()
    name = input("Enter name of BioCompute Object: ")
    now = datetime.now()
    created = now.strftime("%m/%d/%Y-%H:%M:%S")
@@ -314,7 +316,10 @@ def main():
    
    #execution 
    print(color.BOLD + "\nExecution Domain Information" + color.END)
-   print("Enter script uris in the following format: 'uri1 uri2 uri3 uri4'")
+   print()
+   print(color.CYAN + "You are required to enter the script object uri, script driver, software prerequisites, external data endpoints, and environment variables." + color.END)
+   print()
+   print("URIs must begin with 'https://'. Enter script uris in the following format: 'uri1 uri2 uri3 uri4'")
    script_input = input("\nEnter the uris for the script objects used to perform computations: ")
    script = []
    script_list = script_input.lstrip().rstrip().split(" ")
@@ -330,7 +335,7 @@ def main():
    while(add_software_prerequisite.lower().strip() == "y"):
       sp_name = input("Enter software prerequisite name: ")
       sp_version = input("Enter software prerequisite version: ")
-      sp_uri = input("Enter software prerequisite uri: ")
+      sp_uri = input("URIs must begin with 'https://'. Enter software prerequisite uri: ")
       software_prerequisites.append(software_prerequisite(version = sp_version, name = sp_name, uri = uri(uri=sp_uri)))
       add_software_prerequisite = input("Add another software prerequisite? y/n: ")
    external_data_endpoints = []
@@ -366,6 +371,9 @@ def main():
    step_number = 1
    input_list_master = []
    output_list_master = []
+   print()
+   print(color.CYAN + "You are required to enter the name of the tool, the purpose, and the input/output file uris at each step." + color.END)
+   print()
    while(step_number != len(pipeline) + 1): #step number cannot exceed number of steps 
       print("Current step number: {}".format(step_number))
       name = pipeline[step_number-1].split(" ")[0]
@@ -375,11 +383,11 @@ def main():
          name = name_input
       description = input("Enter purpose of the tool: ")
       # version = input("Enter version of the tool: ")
-      print("\nEnter input file uris in the following format: 'uri1 uri2 uri3 uri4'\n")
+      print("\nURIs must begin with 'https://'. Enter input file uris in the following format: 'uri1 uri2 uri3 uri4'\n")
       input_list_temp = input("Enter input file uris if this step uses input files: ").lstrip().rstrip().split(" ")
       for x in range(len(input_list_temp)):
           input_list_temp[x] = uri(uri=input_list_temp[x])
-      print("\nEnter output file uris in the following format: 'uri1 uri2 uri3 uri4'\n")
+      print("\nURIs must begin with 'https://'. Enter output file uris in the following format: 'uri1 uri2 uri3 uri4'\n")
       output_list_temp = input("Enter output file uris if this step outputs to files: ").lstrip().rstrip().split(" ")
       for x in range(len(output_list_temp)):
          output_list_temp[x] = uri(uri=output_list_temp[x])
@@ -408,7 +416,7 @@ def main():
       print(x.uri.uri)
    add_input = input("Do you want to add additional input files? y/n: ")
    while(add_input.strip().lower() == "y"):
-      input_file_uri = input("Enter input file uri: ")
+      input_file_uri = input("URIs must begin with 'https://'. Enter input file uri: ")
       inputs.append(input_subdomain_item(uri = uri(uri=input_file_uri)))
       add_input = input("Add an input file? y/n: ")
          
@@ -423,7 +431,7 @@ def main():
       outputs.append(output_subdomain_item(uri=output, mediatype=output_mediatype))
    add_output = input("Do you want to add additional output files? y/n: ")
    while(add_output.strip().lower() == "y"):
-      output = input("Enter output file uri: ")
+      output = input("URIs must begin with 'https://'. Enter output file uri: ")
       output_mediatype = input("Enter output file mediatype: ")
       outputs.append(output_subdomain_item(uri=uri(uri=output), mediatype=output_mediatype))
       add_output = input("Add an output file? y/n: ")
@@ -532,7 +540,7 @@ def main():
    add_extension_domain = input("This domain is optional. Would you like to add an extension domain? y/n: ")
    if add_extension_domain.strip().lower() == "y":
       while add_extension_domain.strip().lower() == "y":       
-         extension.append(extension_domain_item(extension_schema=input("Enter a uri that points to an extension json schema: ").lstrip().rstrip()))
+         extension.append(extension_domain_item(extension_schema=input("URIs must begin with 'https://'. Enter a uri that points to an extension json schema: ").lstrip().rstrip()))
          add_extension_domain = input("Would you like to add another extension json schema? y/n: ")
                    
    output_bco = BCO(provenance = provenance, usability = usability, description = description, execution = execution, io = io, object_id = None, spec_version = None, etag = None, parametric = parametric, error=error, extension=extension)
