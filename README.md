@@ -41,7 +41,7 @@ git clone https://github.com/p-m-ishra/BioComputeObjectCreatorCommandLineTool.gi
 
 ## Usage
 
-* Current Prerequisiteshttps://drive.google.com/file/d/1NPw-CcfMkGLqKFbO7OPF9djmEmE3HjoW/view?usp=sharing)
+* Current Prerequisites https://drive.google.com/file/d/1NPw-CcfMkGLqKFbO7OPF9djmEmE3HjoW/view?usp=sharing 
   * Pipeline must be on first line of input after script started message (E.g. after this line: `Script started on 2020-08-01 15:21:02-0400`) 
   * Pipeline must be one line long
   * Symbol after working directory must be $ or # (E.g. `pranav@laptop:~$` or `root@laptop:~#`)
